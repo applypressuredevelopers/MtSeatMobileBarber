@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "1005241157460",
+    "firebase_url": "https://mtseat-default-rtdb.firebaseio.com",
+    "project_id": "mtseat",
+    "storage_bucket": "mtseat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1005241157460:android:e87680ccc06dc12afe2ac1",
+        "android_client_info": {
+          "package_name": "com.example.barber_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1005241157460-o1top8ka49vcvcnakp05ihmm47q1t123.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOElBEpt89edHeEvmUC52J73iqE3OjFsI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1005241157460-o1top8ka49vcvcnakp05ihmm47q1t123.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1005241157460:android:adb09b7ef55579a8fe2ac1",
+        "android_client_info": {
+          "package_name": "com.example.mt_seat_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1005241157460-o1top8ka49vcvcnakp05ihmm47q1t123.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOElBEpt89edHeEvmUC52J73iqE3OjFsI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1005241157460-o1top8ka49vcvcnakp05ihmm47q1t123.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1005241157460:android:f9180ba2f2ed748dfe2ac1",
+        "android_client_info": {
+          "package_name": "com.example.mt_seat_owner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1005241157460-o1top8ka49vcvcnakp05ihmm47q1t123.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOElBEpt89edHeEvmUC52J73iqE3OjFsI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1005241157460-o1top8ka49vcvcnakp05ihmm47q1t123.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
