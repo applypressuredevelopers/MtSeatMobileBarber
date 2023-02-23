@@ -290,10 +290,26 @@ class _CheckInPageState extends State<CheckInPage> {
     for (int i = 0; i < bookingsToday.length; i++) {
       //counting all the bookings for the day
       if (bookingsToday[i].note.toString() != "childElement") {
-        q1++;
+
+        String s  = bookingsToday[i].slotTo.toString();
+        TimeOfDay sloTime = TimeOfDay(hour:int.parse(s.split(":")[0]),minute: int.parse(s.split(":")[1]));
+        TimeOfDay timeOfDay = TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute);
+
+        print(s);
+        print(timeOfDay);
+        int slotTimeMinutes = sloTime.hour* 60 + sloTime.minute;
+        int timeOfDayMinutes = timeOfDay.hour*60 + timeOfDay.minute;
+
+        print(slotTimeMinutes);
+        print(timeOfDayMinutes);
+
+        if(slotTimeMinutes>timeOfDayMinutes) {
+          q1++;
+        }
       }
       //counting people joined the queue
       if (bookingsToday[i].queue == "yes") {
+        // if(bookingsToday[i].slotTo ==)
         qcount++;
       }
     }
@@ -1106,6 +1122,9 @@ class _CheckInPageState extends State<CheckInPage> {
       ///find current month name
       ///
       await process();
+      setState(() {
+
+      });
     });
   }
 
@@ -1134,7 +1153,14 @@ class _CheckInPageState extends State<CheckInPage> {
           elevation: 0,
           actions: [
             _buildCartAndBell(url: AppImages.bell, context: context),
-            _buildCartAndBell(url: AppImages.cart, context: context),
+            IconButton(onPressed: () async {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => super.widget));
+             // Get.to(()=>const CheckInPage());
+            }, icon: const Icon(Icons.refresh,)),
+            const SizedBox(width: 10,)
           ],
         ),
         backgroundColor: Colors.transparent,
@@ -1360,7 +1386,7 @@ class _CheckInPageState extends State<CheckInPage> {
                   // _buildHorizontalList(),
                   // for (int i = 0; i < stylist.length; i++)
                   DefaultTabController(
-                    length: 3,
+                    length: 2,
                     child: SizedBox(
                       height: MediaQuery.of(context).size.height * 0.9,
                       child: Column(
@@ -1369,14 +1395,16 @@ class _CheckInPageState extends State<CheckInPage> {
                             child:
                                 const TabBar(padding: EdgeInsets.zero, tabs: [
                               Tab(
+
                                 text: "In shop",
                               ),
                               Tab(
                                 text: "Home Visit",
                               ),
-                              Tab(
-                                text: "Both",
-                              ),
+
+                              // Tab(
+                              //   text: "Both",
+                              // ),
                             ]),
                           ),
                           Expanded(
@@ -1387,7 +1415,10 @@ class _CheckInPageState extends State<CheckInPage> {
                                   stylist
                                           .where((element) =>
                                               element.barberStatus == "In Shop")
-                                          .isNotEmpty
+                                          .isNotEmpty||  stylist
+                                      .where((element) =>
+                                  element.barberStatus == "Both")
+                                      .isNotEmpty
                                       ? ListView.builder(
                                           shrinkWrap: true,
                                           itemCount: stylist.length,
@@ -1398,7 +1429,8 @@ class _CheckInPageState extends State<CheckInPage> {
                                             return Container(
                                               child:
                                                   stylist[index].barberStatus ==
-                                                          "In Shop"
+                                                          "In Shop" || stylist[index].barberStatus ==
+                                                      "Both"
                                                       ? InkWell(
                                                           onTap: () {
                                                             selected = index;
@@ -1763,6 +1795,11 @@ class _CheckInPageState extends State<CheckInPage> {
                                           .where((element) =>
                                               element.barberStatus ==
                                               "Home Visit")
+                                          .isNotEmpty ||
+                                      stylist
+                                          .where((element) =>
+                                      element.barberStatus ==
+                                          "Both")
                                           .isNotEmpty
                                       ? ListView.builder(
                                           shrinkWrap: true,
@@ -1775,7 +1812,9 @@ class _CheckInPageState extends State<CheckInPage> {
                                                 child:
                                                     stylist[index]
                                                                 .barberStatus ==
-                                                            "Home Visit"
+                                                            "Home Visit" ||  stylist[index]
+                                                        .barberStatus ==
+                                                        "Both"
                                                         ? InkWell(
                                                             onTap: () {
                                                               selected = index;
@@ -2133,631 +2172,363 @@ class _CheckInPageState extends State<CheckInPage> {
                                           ),
                                         ),
 
-                                  stylist
-                                          .where((element) =>
-                                              element.barberStatus == "Both")
-                                          .isNotEmpty
-                                      ? ListView.builder(
-                                          shrinkWrap: true,
-                                          itemCount: stylist.length,
-                                          // .where((element) =>
-                                          //     element.barberStatus == "Both")
-                                          // .length,
-                                          itemBuilder: (context, index) {
-                                            return Container(
-                                                child:
-                                                    stylist[index]
-                                                                .barberStatus ==
-                                                            "Both"
-                                                        ? InkWell(
-                                                            onTap: () {
-                                                              selected = index;
-                                                              setState(() {});
-                                                            },
-                                                            child: Container(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .symmetric(
-                                                                horizontal: 10,
-                                                                vertical: 20,
-                                                              ),
-                                                              margin:
-                                                                  const EdgeInsets
-                                                                      .only(
-                                                                left: 10,
-                                                                right: 10,
-                                                                bottom: 5,
-                                                              ),
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: selected ==
-                                                                        index
-                                                                    ? AppColors
-                                                                        .yellowColors
-                                                                    : Colors
-                                                                        .black26,
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            20),
-                                                                border:
-                                                                    Border.all(
-                                                                  width: 2,
-                                                                  color: index ==
-                                                                          0
-                                                                      ? Colors
-                                                                          .green
-                                                                      : AppColors
-                                                                          .yellowColors,
-                                                                ),
-                                                              ),
-                                                              child: Row(
-                                                                children: [
-                                                                  Column(
-                                                                    children: [
-                                                                      Image
-                                                                          .asset(
-                                                                        AppImages
-                                                                            .yellowGrid,
-                                                                        width:
-                                                                            18,
-                                                                        height:
-                                                                            18,
-                                                                        color: selected ==
-                                                                                index
-                                                                            ? Colors.black
-                                                                            : AppColors.yellowColors,
-                                                                        fit: BoxFit
-                                                                            .cover,
-                                                                      ),
-                                                                      const SizedBox(
-                                                                        height:
-                                                                            2,
-                                                                      ),
-                                                                      Text(
-                                                                        'Available',
-                                                                        style:
-                                                                            TextStyle(
-                                                                          fontSize:
-                                                                              13,
-                                                                          color: selected == index
-                                                                              ? Colors.black
-                                                                              : Colors.white,
-                                                                        ),
-                                                                      ),
-                                                                      Text(
-                                                                        'Time Slots',
-                                                                        style:
-                                                                            TextStyle(
-                                                                          fontSize:
-                                                                              13,
-                                                                          color: selected == index
-                                                                              ? Colors.black
-                                                                              : Colors.white,
-                                                                        ),
-                                                                      ),
-                                                                      const SizedBox(
-                                                                        height:
-                                                                            8,
-                                                                      ),
-                                                                      Text(
-                                                                        'M , T , W , T , F , S , S',
-                                                                        style:
-                                                                            TextStyle(
-                                                                          fontSize:
-                                                                              8,
-                                                                          color: selected == index
-                                                                              ? Colors.black
-                                                                              : Colors.white,
-                                                                          fontStyle:
-                                                                              FontStyle.italic,
-                                                                        ),
-                                                                      ),
-                                                                      const SizedBox(
-                                                                        height:
-                                                                            5,
-                                                                      ),
-
-                                                                      InkWell(
-                                                                        onTap:
-                                                                            () {
-                                                                          joinQueue =
-                                                                              "no";
-                                                                          selectedStylistName = stylist[index]
-                                                                              .fullName
-                                                                              .toString();
-                                                                          selectedStylistId = stylist[index]
-                                                                              .uid
-                                                                              .toString();
-                                                                          selectedStylistImage = stylist[index]
-                                                                              .image
-                                                                              .toString();
-                                                                          print(
-                                                                              selectedStylistName);
-                                                                          setState(
-                                                                              () {
-                                                                            customerName++;
-                                                                          });
-                                                                          showDialog(
-                                                                            context:
-                                                                                context,
-                                                                            builder:
-                                                                                (BuildContext context) {
-                                                                              return CustomDialog(
-                                                                                customerName: customerName,
-                                                                              );
-                                                                            },
-                                                                          );
-                                                                        },
-                                                                        child:
-                                                                            Container(
-                                                                          decoration:
-                                                                              BoxDecoration(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(40),
-                                                                            color: selected == index
-                                                                                ? Colors.black
-                                                                                : AppColors.yellowColors,
-                                                                          ),
-                                                                          padding: const EdgeInsets.symmetric(
-                                                                              horizontal: 20,
-                                                                              vertical: 7.5),
-                                                                          child:
-                                                                              const Text(
-                                                                            'Book a slot',
-                                                                            textAlign:
-                                                                                TextAlign.center,
-                                                                            style:
-                                                                                TextStyle(
-                                                                              color: Colors.white,
-                                                                              fontSize: 12,
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      )
-
-                                                                      // ghjk
-                                                                      // _buildButton(
-                                                                      //
-                                                                      //   text: 'Book A Slot',
-                                                                      //   color: selected == i
-                                                                      //       ? Colors.black
-                                                                      //       : AppColors.yellowColors,
-                                                                      //
-                                                                      //   i: i,
-                                                                      // )
-                                                                    ],
-                                                                  ),
-
-                                                                  const Spacer(),
-                                                                  Column(
-                                                                    children: [
-                                                                      if (stylist[index]
-                                                                              .image
-                                                                              .toString() !=
-                                                                          'null')
-                                                                        Container(
-                                                                          height:
-                                                                              65,
-                                                                          width:
-                                                                              65,
-                                                                          decoration:
-                                                                              BoxDecoration(
-                                                                            border:
-                                                                                Border.all(color: AppColors.yellowColors),
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(120),
-                                                                            image:
-                                                                                DecorationImage(
-                                                                              image: NetworkImage(
-                                                                                stylist[index].image.toString(),
-                                                                              ),
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      const SizedBox(
-                                                                        height:
-                                                                            10,
-                                                                      ),
-                                                                      Text(
-                                                                        stylist[index]
-                                                                            .fullName
-                                                                            .toString(),
-                                                                        style:
-                                                                            const TextStyle(
-                                                                          color:
-                                                                              Colors.white,
-                                                                          fontSize:
-                                                                              14,
-                                                                          fontWeight:
-                                                                              FontWeight.bold,
-                                                                        ),
-                                                                      )
-                                                                    ],
-                                                                  ),
-                                                                  const Spacer(),
-
-                                                                  Column(
-                                                                    children: [
-                                                                      Image.asset(
-                                                                        AppImages
-                                                                            .yellowCalender,
-                                                                        width:
-                                                                            18,
-                                                                        height:
-                                                                            18,
-                                                                        color: selected ==
-                                                                                index
-                                                                            ? Colors.black
-                                                                            : AppColors.yellowColors,
-                                                                        fit: BoxFit
-                                                                            .cover,
-                                                                      ),
-                                                                      const SizedBox(
-                                                                        height:
-                                                                            2,
-                                                                      ),
-                                                                      if (minutesLeft
-                                                                          .isNotEmpty)
-                                                                        Text(
-                                                                          'Empty Seat',
-                                                                          style:
-                                                                              TextStyle(
-                                                                            fontSize:
-                                                                                13,
-                                                                            color: selected == index
-                                                                                ? Colors.black
-                                                                                : Colors.white,
-                                                                          ),
-                                                                        ),
-                                                                      // if(minutesLeft.isNotEmpty)
-                                                                      if (int.parse(
-                                                                              freeSlots1[index].toString()) >
-                                                                          0)
-                                                                        Text(
-                                                                          'Available in ${freeSlots1[index].toString()} min',
-                                                                          style:
-                                                                              TextStyle(
-                                                                            fontSize:
-                                                                                13,
-                                                                            color: selected == index
-                                                                                ? Colors.black
-                                                                                : Colors.white,
-                                                                          ),
-                                                                        ),
-                                                                      if (int.parse(freeSlots1[index].toString()) <1)
-                                                                        Text(
-                                                                          'Available now',
-                                                                          style:
-                                                                              TextStyle(
-                                                                            fontSize:
-                                                                                13,
-                                                                            color: selected == index
-                                                                                ? Colors.black
-                                                                                : Colors.white,
-                                                                          ),
-                                                                        ),
-                                                                      const SizedBox(height:8,),
-                                                                      if (quesFinal
-                                                                          .isNotEmpty)
-                                                                        Text('${quesFinal[index].toString()} customers in queue',
-                                                                          style:TextStyle(
-                                                                            fontSize:
-                                                                                8,
-                                                                            color: selected == index
-                                                                                ? Colors.black
-                                                                                : Colors.white,
-                                                                            fontStyle:
-                                                                                FontStyle.italic,
-                                                                          ),
-                                                                        ),
-                                                                      const SizedBox(height:5,),
-                                                                      _buildButton(text:'Join Now',color: Colors.green,i: index,)
-                                                                    ],
-                                                                  )
-
-                                                                  // _buildColumn(
-                                                                  //   url: AppImages.yellowCalender,
-                                                                  //   t1: 'Empty Seat',
-                                                                  //   t2: 'Available in 20 min',
-                                                                  //   t3: '${i + 0} customer in queue',
-                                                                  //   btnColors: Colors.green,
-                                                                  //   btnText: 'Join Now',
-                                                                  //   i: i,
-                                                                  // ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          )
-                                                        : Container()
-
-                                                // Center(
-                                                //     child: Text(
-                                                //       "No In Shop Barbers available",
-                                                //       style: TextStyle(
-                                                //           color: Colors.white),
-                                                //     ),
-                                                //   )
-                                                );
-                                          })
-                                      : const Center(
-                                          child: Text(
-                                            "No barbers available",
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                        )
-
-                                  // for (int i = 0; i < stylist.length; i++)
-
-                                  // for (int i = 0; i < stylist.length; i++)
-                                  //   InkWell(
-                                  //     onTap: () {
-                                  //       selected = i;
-                                  //       setState(() {});
-                                  //     },
-                                  //     child: Container(
-                                  //       padding: const EdgeInsets.symmetric(
-                                  //         horizontal: 10,
-                                  //         vertical: 20,
-                                  //       ),
-                                  //       margin: const EdgeInsets.only(
-                                  //         left: 10,
-                                  //         right: 10,
-                                  //         bottom: 5,
-                                  //       ),
-                                  //       decoration: BoxDecoration(
-                                  //         color: selected == i
-                                  //             ? AppColors.yellowColors
-                                  //             : Colors.black26,
-                                  //         borderRadius: BorderRadius.circular(20),
-                                  //         border: Border.all(
-                                  //           width: 2,
-                                  //           color: i == 0
-                                  //               ? Colors.green
-                                  //               : AppColors.yellowColors,
+                                  // stylist
+                                  //         .where((element) =>
+                                  //             element.barberStatus == "Both")
+                                  //         .isNotEmpty
+                                  //     ? ListView.builder(
+                                  //         shrinkWrap: true,
+                                  //         itemCount: stylist.length,
+                                  //         // .where((element) =>
+                                  //         //     element.barberStatus == "Both")
+                                  //         // .length,
+                                  //         itemBuilder: (context, index) {
+                                  //           return Container(
+                                  //               child:
+                                  //                   stylist[index]
+                                  //                               .barberStatus ==
+                                  //                           "Both"
+                                  //                       ? InkWell(
+                                  //                           onTap: () {
+                                  //                             selected = index;
+                                  //                             setState(() {});
+                                  //                           },
+                                  //                           child: Container(
+                                  //                             padding:
+                                  //                                 const EdgeInsets
+                                  //                                     .symmetric(
+                                  //                               horizontal: 10,
+                                  //                               vertical: 20,
+                                  //                             ),
+                                  //                             margin:
+                                  //                                 const EdgeInsets
+                                  //                                     .only(
+                                  //                               left: 10,
+                                  //                               right: 10,
+                                  //                               bottom: 5,
+                                  //                             ),
+                                  //                             decoration:
+                                  //                                 BoxDecoration(
+                                  //                               color: selected ==
+                                  //                                       index
+                                  //                                   ? AppColors
+                                  //                                       .yellowColors
+                                  //                                   : Colors
+                                  //                                       .black26,
+                                  //                               borderRadius:
+                                  //                                   BorderRadius
+                                  //                                       .circular(
+                                  //                                           20),
+                                  //                               border:
+                                  //                                   Border.all(
+                                  //                                 width: 2,
+                                  //                                 color: index ==
+                                  //                                         0
+                                  //                                     ? Colors
+                                  //                                         .green
+                                  //                                     : AppColors
+                                  //                                         .yellowColors,
+                                  //                               ),
+                                  //                             ),
+                                  //                             child: Row(
+                                  //                               children: [
+                                  //                                 Column(
+                                  //                                   children: [
+                                  //                                     Image
+                                  //                                         .asset(
+                                  //                                       AppImages
+                                  //                                           .yellowGrid,
+                                  //                                       width:
+                                  //                                           18,
+                                  //                                       height:
+                                  //                                           18,
+                                  //                                       color: selected ==
+                                  //                                               index
+                                  //                                           ? Colors.black
+                                  //                                           : AppColors.yellowColors,
+                                  //                                       fit: BoxFit
+                                  //                                           .cover,
+                                  //                                     ),
+                                  //                                     const SizedBox(
+                                  //                                       height:
+                                  //                                           2,
+                                  //                                     ),
+                                  //                                     Text(
+                                  //                                       'Available',
+                                  //                                       style:
+                                  //                                           TextStyle(
+                                  //                                         fontSize:
+                                  //                                             13,
+                                  //                                         color: selected == index
+                                  //                                             ? Colors.black
+                                  //                                             : Colors.white,
+                                  //                                       ),
+                                  //                                     ),
+                                  //                                     Text(
+                                  //                                       'Time Slots',
+                                  //                                       style:
+                                  //                                           TextStyle(
+                                  //                                         fontSize:
+                                  //                                             13,
+                                  //                                         color: selected == index
+                                  //                                             ? Colors.black
+                                  //                                             : Colors.white,
+                                  //                                       ),
+                                  //                                     ),
+                                  //                                     const SizedBox(
+                                  //                                       height:
+                                  //                                           8,
+                                  //                                     ),
+                                  //                                     Text(
+                                  //                                       'M , T , W , T , F , S , S',
+                                  //                                       style:
+                                  //                                           TextStyle(
+                                  //                                         fontSize:
+                                  //                                             8,
+                                  //                                         color: selected == index
+                                  //                                             ? Colors.black
+                                  //                                             : Colors.white,
+                                  //                                         fontStyle:
+                                  //                                             FontStyle.italic,
+                                  //                                       ),
+                                  //                                     ),
+                                  //                                     const SizedBox(
+                                  //                                       height:
+                                  //                                           5,
+                                  //                                     ),
+                                  //
+                                  //                                     InkWell(
+                                  //                                       onTap:
+                                  //                                           () {
+                                  //                                         joinQueue =
+                                  //                                             "no";
+                                  //                                         selectedStylistName = stylist[index]
+                                  //                                             .fullName
+                                  //                                             .toString();
+                                  //                                         selectedStylistId = stylist[index]
+                                  //                                             .uid
+                                  //                                             .toString();
+                                  //                                         selectedStylistImage = stylist[index]
+                                  //                                             .image
+                                  //                                             .toString();
+                                  //                                         print(
+                                  //                                             selectedStylistName);
+                                  //                                         setState(
+                                  //                                             () {
+                                  //                                           customerName++;
+                                  //                                         });
+                                  //                                         showDialog(
+                                  //                                           context:
+                                  //                                               context,
+                                  //                                           builder:
+                                  //                                               (BuildContext context) {
+                                  //                                             return CustomDialog(
+                                  //                                               customerName: customerName,
+                                  //                                             );
+                                  //                                           },
+                                  //                                         );
+                                  //                                       },
+                                  //                                       child:
+                                  //                                           Container(
+                                  //                                         decoration:
+                                  //                                             BoxDecoration(
+                                  //                                           borderRadius:
+                                  //                                               BorderRadius.circular(40),
+                                  //                                           color: selected == index
+                                  //                                               ? Colors.black
+                                  //                                               : AppColors.yellowColors,
+                                  //                                         ),
+                                  //                                         padding: const EdgeInsets.symmetric(
+                                  //                                             horizontal: 20,
+                                  //                                             vertical: 7.5),
+                                  //                                         child:
+                                  //                                             const Text(
+                                  //                                           'Book a slot',
+                                  //                                           textAlign:
+                                  //                                               TextAlign.center,
+                                  //                                           style:
+                                  //                                               TextStyle(
+                                  //                                             color: Colors.white,
+                                  //                                             fontSize: 12,
+                                  //                                           ),
+                                  //                                         ),
+                                  //                                       ),
+                                  //                                     )
+                                  //
+                                  //                                     // ghjk
+                                  //                                     // _buildButton(
+                                  //                                     //
+                                  //                                     //   text: 'Book A Slot',
+                                  //                                     //   color: selected == i
+                                  //                                     //       ? Colors.black
+                                  //                                     //       : AppColors.yellowColors,
+                                  //                                     //
+                                  //                                     //   i: i,
+                                  //                                     // )
+                                  //                                   ],
+                                  //                                 ),
+                                  //
+                                  //                                 const Spacer(),
+                                  //                                 Column(
+                                  //                                   children: [
+                                  //                                     if (stylist[index]
+                                  //                                             .image
+                                  //                                             .toString() !=
+                                  //                                         'null')
+                                  //                                       Container(
+                                  //                                         height:
+                                  //                                             65,
+                                  //                                         width:
+                                  //                                             65,
+                                  //                                         decoration:
+                                  //                                             BoxDecoration(
+                                  //                                           border:
+                                  //                                               Border.all(color: AppColors.yellowColors),
+                                  //                                           borderRadius:
+                                  //                                               BorderRadius.circular(120),
+                                  //                                           image:
+                                  //                                               DecorationImage(
+                                  //                                             image: NetworkImage(
+                                  //                                               stylist[index].image.toString(),
+                                  //                                             ),
+                                  //                                             fit: BoxFit.cover,
+                                  //                                           ),
+                                  //                                         ),
+                                  //                                       ),
+                                  //                                     const SizedBox(
+                                  //                                       height:
+                                  //                                           10,
+                                  //                                     ),
+                                  //                                     Text(
+                                  //                                       stylist[index]
+                                  //                                           .fullName
+                                  //                                           .toString(),
+                                  //                                       style:
+                                  //                                           const TextStyle(
+                                  //                                         color:
+                                  //                                             Colors.white,
+                                  //                                         fontSize:
+                                  //                                             14,
+                                  //                                         fontWeight:
+                                  //                                             FontWeight.bold,
+                                  //                                       ),
+                                  //                                     )
+                                  //                                   ],
+                                  //                                 ),
+                                  //                                 const Spacer(),
+                                  //
+                                  //                                 Column(
+                                  //                                   children: [
+                                  //                                     Image.asset(
+                                  //                                       AppImages
+                                  //                                           .yellowCalender,
+                                  //                                       width:
+                                  //                                           18,
+                                  //                                       height:
+                                  //                                           18,
+                                  //                                       color: selected ==
+                                  //                                               index
+                                  //                                           ? Colors.black
+                                  //                                           : AppColors.yellowColors,
+                                  //                                       fit: BoxFit
+                                  //                                           .cover,
+                                  //                                     ),
+                                  //                                     const SizedBox(
+                                  //                                       height:
+                                  //                                           2,
+                                  //                                     ),
+                                  //                                     if (minutesLeft
+                                  //                                         .isNotEmpty)
+                                  //                                       Text(
+                                  //                                         'Empty Seat',
+                                  //                                         style:
+                                  //                                             TextStyle(
+                                  //                                           fontSize:
+                                  //                                               13,
+                                  //                                           color: selected == index
+                                  //                                               ? Colors.black
+                                  //                                               : Colors.white,
+                                  //                                         ),
+                                  //                                       ),
+                                  //                                     // if(minutesLeft.isNotEmpty)
+                                  //                                     if (int.parse(
+                                  //                                             freeSlots1[index].toString()) >
+                                  //                                         0)
+                                  //                                       Text(
+                                  //                                         'Available in ${freeSlots1[index].toString()} min',
+                                  //                                         style:
+                                  //                                             TextStyle(
+                                  //                                           fontSize:
+                                  //                                               13,
+                                  //                                           color: selected == index
+                                  //                                               ? Colors.black
+                                  //                                               : Colors.white,
+                                  //                                         ),
+                                  //                                       ),
+                                  //                                     if (int.parse(freeSlots1[index].toString()) <1)
+                                  //                                       Text(
+                                  //                                         'Available now',
+                                  //                                         style:
+                                  //                                             TextStyle(
+                                  //                                           fontSize:
+                                  //                                               13,
+                                  //                                           color: selected == index
+                                  //                                               ? Colors.black
+                                  //                                               : Colors.white,
+                                  //                                         ),
+                                  //                                       ),
+                                  //                                     const SizedBox(height:8,),
+                                  //                                     if (quesFinal
+                                  //                                         .isNotEmpty)
+                                  //                                       Text('${quesFinal[index].toString()} customers in queue',
+                                  //                                         style:TextStyle(
+                                  //                                           fontSize:
+                                  //                                               8,
+                                  //                                           color: selected == index
+                                  //                                               ? Colors.black
+                                  //                                               : Colors.white,
+                                  //                                           fontStyle:
+                                  //                                               FontStyle.italic,
+                                  //                                         ),
+                                  //                                       ),
+                                  //                                     const SizedBox(height:5,),
+                                  //                                     _buildButton(text:'Join Now',color: Colors.green,i: index,)
+                                  //                                   ],
+                                  //                                 )
+                                  //
+                                  //                                 // _buildColumn(
+                                  //                                 //   url: AppImages.yellowCalender,
+                                  //                                 //   t1: 'Empty Seat',
+                                  //                                 //   t2: 'Available in 20 min',
+                                  //                                 //   t3: '${i + 0} customer in queue',
+                                  //                                 //   btnColors: Colors.green,
+                                  //                                 //   btnText: 'Join Now',
+                                  //                                 //   i: i,
+                                  //                                 // ),
+                                  //                               ],
+                                  //                             ),
+                                  //                           ),
+                                  //                         )
+                                  //                       : Container()
+                                  //
+                                  //               // Center(
+                                  //               //     child: Text(
+                                  //               //       "No In Shop Barbers available",
+                                  //               //       style: TextStyle(
+                                  //               //           color: Colors.white),
+                                  //               //     ),
+                                  //               //   )
+                                  //               );
+                                  //         })
+                                  //     : const Center(
+                                  //         child: Text(
+                                  //           "No barbers available",
+                                  //           style:
+                                  //               TextStyle(color: Colors.white),
                                   //         ),
-                                  //       ),
-                                  //       child: Row(
-                                  //         children: [
-                                  //           Column(
-                                  //             children: [
-                                  //               Image.asset(
-                                  //                 AppImages.yellowGrid,
-                                  //                 width: 18,
-                                  //                 height: 18,
-                                  //                 color: selected == i
-                                  //                     ? Colors.black
-                                  //                     : AppColors.yellowColors,
-                                  //                 fit: BoxFit.cover,
-                                  //               ),
-                                  //               const SizedBox(
-                                  //                 height: 2,
-                                  //               ),
-                                  //               Text(
-                                  //                 'Available',
-                                  //                 style: TextStyle(
-                                  //                   fontSize: 13,
-                                  //                   color: selected == i
-                                  //                       ? Colors.black
-                                  //                       : Colors.white,
-                                  //                 ),
-                                  //               ),
-                                  //               Text(
-                                  //                 'Time Slots',
-                                  //                 style: TextStyle(
-                                  //                   fontSize: 13,
-                                  //                   color: selected == i
-                                  //                       ? Colors.black
-                                  //                       : Colors.white,
-                                  //                 ),
-                                  //               ),
-                                  //               const SizedBox(
-                                  //                 height: 8,
-                                  //               ),
-                                  //               Text(
-                                  //                 'M , T , W , T , F , S , S',
-                                  //                 style: TextStyle(
-                                  //                   fontSize: 8,
-                                  //                   color: selected == i
-                                  //                       ? Colors.black
-                                  //                       : Colors.white,
-                                  //                   fontStyle: FontStyle.italic,
-                                  //                 ),
-                                  //               ),
-                                  //               const SizedBox(
-                                  //                 height: 5,
-                                  //               ),
+                                  //       )
 
-                                  //               InkWell(
-                                  //                 onTap: () {
-                                  //                   joinQueue = "no";
-                                  //                   selectedStylistName = stylist[i]
-                                  //                       .fullName
-                                  //                       .toString();
-                                  //                   selectedStylistId =
-                                  //                       stylist[i].uid.toString();
-                                  //                   selectedStylistImage =
-                                  //                       stylist[i].image.toString();
-                                  //                   print(selectedStylistName);
-                                  //                   setState(() {
-                                  //                     customerName++;
-                                  //                   });
-                                  //                   showDialog(
-                                  //                     context: context,
-                                  //                     builder:
-                                  //                         (BuildContext context) {
-                                  //                       return CustomDialog(
-                                  //                         customerName:
-                                  //                             customerName,
-                                  //                       );
-                                  //                     },
-                                  //                   );
-                                  //                 },
-                                  //                 child: Container(
-                                  //                   decoration: BoxDecoration(
-                                  //                     borderRadius:
-                                  //                         BorderRadius.circular(40),
-                                  //                     color: selected == i
-                                  //                         ? Colors.black
-                                  //                         : AppColors.yellowColors,
-                                  //                   ),
-                                  //                   padding:
-                                  //                       const EdgeInsets.symmetric(
-                                  //                           horizontal: 20,
-                                  //                           vertical: 7.5),
-                                  //                   child: const Text(
-                                  //                     'Book a slot',
-                                  //                     textAlign: TextAlign.center,
-                                  //                     style: TextStyle(
-                                  //                       color: Colors.white,
-                                  //                       fontSize: 12,
-                                  //                     ),
-                                  //                   ),
-                                  //                 ),
-                                  //               )
 
-                                  //               // ghjk
-                                  //               // _buildButton(
-                                  //               //
-                                  //               //   text: 'Book A Slot',
-                                  //               //   color: selected == i
-                                  //               //       ? Colors.black
-                                  //               //       : AppColors.yellowColors,
-                                  //               //
-                                  //               //   i: i,
-                                  //               // )
-                                  //             ],
-                                  //           ),
-
-                                  //           const Spacer(),
-                                  //           Column(
-                                  //             children: [
-                                  //               if (stylist[i].image.toString() !=
-                                  //                   'null')
-                                  //                 Container(
-                                  //                   height: 65,
-                                  //                   width: 65,
-                                  //                   decoration: BoxDecoration(
-                                  //                     border: Border.all(
-                                  //                         color: AppColors
-                                  //                             .yellowColors),
-                                  //                     borderRadius:
-                                  //                         BorderRadius.circular(
-                                  //                             120),
-                                  //                     image: DecorationImage(
-                                  //                       image: NetworkImage(
-                                  //                         stylist[i]
-                                  //                             .image
-                                  //                             .toString(),
-                                  //                       ),
-                                  //                       fit: BoxFit.cover,
-                                  //                     ),
-                                  //                   ),
-                                  //                 ),
-                                  //               const SizedBox(
-                                  //                 height: 10,
-                                  //               ),
-                                  //               Text(
-                                  //                 stylist[i].fullName.toString(),
-                                  //                 style: const TextStyle(
-                                  //                   color: Colors.white,
-                                  //                   fontSize: 14,
-                                  //                   fontWeight: FontWeight.bold,
-                                  //                 ),
-                                  //               )
-                                  //             ],
-                                  //           ),
-                                  //           const Spacer(),
-
-                                  //           Column(
-                                  //             children: [
-                                  //               Image.asset(
-                                  //                 AppImages.yellowCalender,
-                                  //                 width: 18,
-                                  //                 height: 18,
-                                  //                 color: selected == i
-                                  //                     ? Colors.black
-                                  //                     : AppColors.yellowColors,
-                                  //                 fit: BoxFit.cover,
-                                  //               ),
-                                  //               const SizedBox(
-                                  //                 height: 2,
-                                  //               ),
-                                  //               if (minutesLeft.isNotEmpty)
-                                  //                 Text(
-                                  //                   'Empty Seat',
-                                  //                   style: TextStyle(
-                                  //                     fontSize: 13,
-                                  //                     color: selected == i
-                                  //                         ? Colors.black
-                                  //                         : Colors.white,
-                                  //                   ),
-                                  //                 ),
-                                  //               // if(minutesLeft.isNotEmpty)
-                                  //               if (int.parse(
-                                  //                       freeSlots1[i].toString()) >
-                                  //                   0)
-                                  //                 Text(
-                                  //                   'Available in ${freeSlots1[i].toString()} min',
-                                  //                   style: TextStyle(
-                                  //                     fontSize: 13,
-                                  //                     color: selected == i
-                                  //                         ? Colors.black
-                                  //                         : Colors.white,
-                                  //                   ),
-                                  //                 ),
-                                  //               if (int.parse(
-                                  //                       freeSlots1[i].toString()) <
-                                  //                   1)
-                                  //                 Text(
-                                  //                   'Available now',
-                                  //                   style: TextStyle(
-                                  //                     fontSize: 13,
-                                  //                     color: selected == i
-                                  //                         ? Colors.black
-                                  //                         : Colors.white,
-                                  //                   ),
-                                  //                 ),
-                                  //               const SizedBox(
-                                  //                 height: 8,
-                                  //               ),
-                                  //               if (quesFinal.isNotEmpty)
-                                  //                 Text(
-                                  //                   '${quesFinal[i].toString()} customers in queue',
-                                  //                   style: TextStyle(
-                                  //                     fontSize: 8,
-                                  //                     color: selected == i
-                                  //                         ? Colors.black
-                                  //                         : Colors.white,
-                                  //                     fontStyle: FontStyle.italic,
-                                  //                   ),
-                                  //                 ),
-                                  //               const SizedBox(
-                                  //                 height: 5,
-                                  //               ),
-                                  //               _buildButton(
-                                  //                 text: 'Join Now',
-                                  //                 color: Colors.green,
-                                  //                 i: i,
-                                  //               )
-                                  //             ],
-                                  //           )
-
-                                  //           // _buildColumn(
-                                  //           //   url: AppImages.yellowCalender,
-                                  //           //   t1: 'Empty Seat',
-                                  //           //   t2: 'Available in 20 min',
-                                  //           //   t3: '${i + 0} customer in queue',
-                                  //           //   btnColors: Colors.green,
-                                  //           //   btnText: 'Join Now',
-                                  //           //   i: i,
-                                  //           // ),
-                                  //         ],
-                                  //       ),
-                                  //     ),
-                                  //   ),
                                 ],
                               ),
                             ),
@@ -3414,8 +3185,6 @@ class _CustomDialogTrimingState extends State<CustomDialogTriming> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
-          // mainAxisAlignment: MainAxisAlignment.start,
-          // crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
             Expanded(
@@ -3445,13 +3214,13 @@ class _CustomDialogTrimingState extends State<CustomDialogTriming> {
                     child: PageView(
                       physics: const NeverScrollableScrollPhysics(),
                       controller: pageController,
+                      scrollDirection: Axis.vertical,
                       children: [
                         _buildAllCategoriesScrollPage(),
                         // _buildScrollPage(category: '1'),
                         // _buildScrollPage(category: '2'),
                         // _buildScrollPage(category: '3'),
                       ],
-                      scrollDirection: Axis.vertical,
                     ),
                   )
                 ],
@@ -3524,17 +3293,17 @@ class _CustomDialogTrimingState extends State<CustomDialogTriming> {
                               builder: (context) => const MakeBookingPage()));
                         }
                       },
+                      style: TextButton.styleFrom(
+                        backgroundColor: AppColors.yellowColors,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
                       child: const Padding(
                         padding: EdgeInsets.symmetric(vertical: 2),
                         child: Text(
                           'Continue',
                           style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      style: TextButton.styleFrom(
-                        backgroundColor: AppColors.yellowColors,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                     )),

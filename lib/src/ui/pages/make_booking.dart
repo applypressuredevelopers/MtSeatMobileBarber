@@ -1140,6 +1140,7 @@ class _MakeBookingPageState extends State<MakeBookingPage> {
             fit: BoxFit.cover,
           ),
         ),
+        height: MediaQuery.of(context).size.height,
         child: SingleChildScrollView(
           controller: scrollController,
           padding: const EdgeInsets.only(
@@ -6294,7 +6295,6 @@ class _MakeBookingPageState extends State<MakeBookingPage> {
             ],
           ),
         ),
-        height: MediaQuery.of(context).size.height,
       ),
     );
   }
@@ -6556,7 +6556,7 @@ class _MakeBookingPageState extends State<MakeBookingPage> {
                     const SizedBox(height: 15,),
                     Row(
                       children: [
-                        Spacer(),
+                        const Spacer(),
                         TextButton(onPressed: (){
                           Get.back();
                         }, child: Text("Ok")),
@@ -6582,6 +6582,7 @@ class _MakeBookingPageState extends State<MakeBookingPage> {
           borderRadius: BorderRadius.circular(4),
           border: Border.all(color: AppColors.yellowColors, width: 2),
         ),
+        margin: const EdgeInsets.only(bottom: 10),
         child: Text(
           slot,
           textAlign: TextAlign.center,
@@ -6590,7 +6591,6 @@ class _MakeBookingPageState extends State<MakeBookingPage> {
             fontSize: 14,
           ),
         ),
-        margin: const EdgeInsets.only(bottom: 10),
       ),
     );
   }
@@ -6604,6 +6604,7 @@ class _MakeBookingPageState extends State<MakeBookingPage> {
         borderRadius: BorderRadius.circular(4),
         border: Border.all(color: Colors.transparent, width: 2),
       ),
+      margin: const EdgeInsets.only(bottom: 10),
       child: const Text(
         "0000:",
         textAlign: TextAlign.center,
@@ -6612,7 +6613,6 @@ class _MakeBookingPageState extends State<MakeBookingPage> {
           fontSize: 14,
         ),
       ),
-      margin: const EdgeInsets.only(bottom: 10),
     );
   }
 
@@ -6655,6 +6655,7 @@ class _MakeBookingPageState extends State<MakeBookingPage> {
                   color: AppColors.yellowColors,
                 ),
                 shape: BoxShape.circle),
+            padding: const EdgeInsets.all(4),
             child: Center(
               child: Text(
                 date ?? '',
@@ -6666,7 +6667,6 @@ class _MakeBookingPageState extends State<MakeBookingPage> {
                 ),
               ),
             ),
-            padding: const EdgeInsets.all(4),
           )
               : Text(
             date ?? '',
@@ -6730,9 +6730,7 @@ class _MakeBookingPageState extends State<MakeBookingPage> {
         }
 
 
-        String formattedTime = hour +
-            ":" +
-            minute;
+        String formattedTime = "$hour:$minute";
 
         selectedTime1 = formattedTime;
 

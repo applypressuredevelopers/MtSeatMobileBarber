@@ -3,7 +3,6 @@
 import 'package:barber_app/src/ui/model/serviceModel.dart';
 
 import 'model/chekOutModel.dart';
-import 'model/chekOutModel.dart';
 
 String selectedShop = "";
 String shopAddress = "";

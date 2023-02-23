@@ -680,9 +680,6 @@ class _BottomHomeViewState extends State<BottomHomeView> {
         children: [
           Row(
             children: [
-              TextButton(onPressed: (){
-                Get.to(()=>CurrentAndFutureBooking());
-              }, child: Text("List")),
               const Expanded(
                 child: Text(
                   'Nearby Service Providers',
