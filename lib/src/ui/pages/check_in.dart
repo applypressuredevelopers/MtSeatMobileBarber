@@ -6,6 +6,8 @@ import 'package:barber_app/src/ui/model/serviceModel.dart';
 import 'package:barber_app/src/ui/pages/add_next_customer.dart';
 import 'package:barber_app/src/ui/pages/booking_done.dart';
 import 'package:barber_app/src/ui/pages/make_booking.dart';
+import 'package:barber_app/src/ui/pages/profile/wierdBorder.dart';
+import 'package:barber_app/src/ui/widgets/custom_button.dart';
 import 'package:barber_app/src/utils/color.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -134,6 +136,8 @@ class _CheckInPageState extends State<CheckInPage> {
   List<String> queueCount = [];
   List<String> freeSlots1 = [];
   List<String> freeSlots2 = [];
+  bool inShop = true;
+  bool homeVisit = false;
 
   String slot1 = "";
   String slot2 = "";
@@ -1385,1157 +1389,737 @@ class _CheckInPageState extends State<CheckInPage> {
                   ),
                   // _buildHorizontalList(),
                   // for (int i = 0; i < stylist.length; i++)
-                  DefaultTabController(
-                    length: 2,
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.9,
-                      child: Column(
+                  Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Container(
-                            child:
-                                const TabBar(padding: EdgeInsets.zero, tabs: [
-                              Tab(
 
-                                text: "In shop",
-                              ),
-                              Tab(
-                                text: "Home Visit",
-                              ),
 
-                              // Tab(
-                              //   text: "Both",
-                              // ),
-                            ]),
+                          CustomButton(onTap: (){
+                            setState(() {
+                              inShop = true;
+                              homeVisit = false;
+                            });
+                          },
+                            btnColor: inShop ?AppColors.yellowColors: AppColors.greyColor,
+                            width: MediaQuery.of(context).size.width*0.4,
+                            height: MediaQuery.of(context).size.height*0.04,
+                            btnText: "In Shop",
+                              btnPadding: EdgeInsets.zero,
                           ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TabBarView(
+
+                          CustomButton(onTap: (){
+                            setState(() {
+                              inShop = false;
+                              homeVisit = true;
+                            });
+                          },
+                            btnColor: homeVisit? AppColors.yellowColors: AppColors.greyColor,
+                            width: MediaQuery.of(context).size.width*0.4,
+                            height: MediaQuery.of(context).size.height*0.04,
+                            btnText: "Home Visit",
+                            btnPadding: EdgeInsets.zero,
+                          ),
+
+
+
+
+                        ],
+                      ),
+                      for(int index = 0; index<stylist.length; index ++)
+
+                      Column(
+                        children: [
+                          if(stylist[index].barberStatus.toString() =="In Shop" && inShop || stylist[index].barberStatus.toString() =="Both" && inShop)
+                          InkWell(
+                            onTap: () {
+                              selected = index;
+                              setState(() {});
+                            },
+                            child: Container(
+                              padding:
+                              const EdgeInsets
+                                  .symmetric(
+                                horizontal: 10,
+                                vertical: 20,
+                              ),
+                              margin:
+                              const EdgeInsets
+                                  .only(
+                                left: 10,
+                                right: 10,
+                                bottom: 5,
+                              ),
+                              decoration:
+                              BoxDecoration(
+                                color: selected ==
+                                    index
+                                    ? AppColors
+                                    .yellowColors
+                                    : Colors
+                                    .black26,
+                                borderRadius:
+                                BorderRadius
+                                    .circular(
+                                    20),
+                                border:
+                                Border.all(
+                                  width: 2,
+                                  color: index ==
+                                      0
+                                      ? Colors
+                                      .green
+                                      : AppColors
+                                      .yellowColors,
+                                ),
+                              ),
+                              child: Row(
                                 children: [
-                                  stylist
-                                          .where((element) =>
-                                              element.barberStatus == "In Shop")
-                                          .isNotEmpty||  stylist
-                                      .where((element) =>
-                                  element.barberStatus == "Both")
-                                      .isNotEmpty
-                                      ? ListView.builder(
-                                          shrinkWrap: true,
-                                          itemCount: stylist.length,
-                                          // .where((element) =>
-                                          //     element.barberStatus == "In Shop")
-                                          // .length,
-                                          itemBuilder: (context, index) {
-                                            return Container(
-                                              child:
-                                                  stylist[index].barberStatus ==
-                                                          "In Shop" || stylist[index].barberStatus ==
-                                                      "Both"
-                                                      ? InkWell(
-                                                          onTap: () {
-                                                            selected = index;
-                                                            setState(() {});
-                                                          },
-                                                          child: Container(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                              horizontal: 10,
-                                                              vertical: 20,
-                                                            ),
-                                                            margin:
-                                                                const EdgeInsets
-                                                                    .only(
-                                                              left: 10,
-                                                              right: 10,
-                                                              bottom: 5,
-                                                            ),
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: selected ==
-                                                                      index
-                                                                  ? AppColors
-                                                                      .yellowColors
-                                                                  : Colors
-                                                                      .black26,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          20),
-                                                              border:
-                                                                  Border.all(
-                                                                width: 2,
-                                                                color: index ==
-                                                                        0
-                                                                    ? Colors
-                                                                        .green
-                                                                    : AppColors
-                                                                        .yellowColors,
-                                                              ),
-                                                            ),
-                                                            child: Row(
-                                                              children: [
-                                                                Column(
-                                                                  children: [
-                                                                    Image.asset(
-                                                                      AppImages
-                                                                          .yellowGrid,
-                                                                      width: 18,
-                                                                      height:
-                                                                          18,
-                                                                      color: selected ==
-                                                                              index
-                                                                          ? Colors
-                                                                              .black
-                                                                          : AppColors
-                                                                              .yellowColors,
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      height: 2,
-                                                                    ),
-                                                                    Text(
-                                                                      'Available',
-                                                                      style:
-                                                                          TextStyle(
-                                                                        fontSize:
-                                                                            13,
-                                                                        color: selected ==
-                                                                                index
-                                                                            ? Colors.black
-                                                                            : Colors.white,
-                                                                      ),
-                                                                    ),
-                                                                    Text(
-                                                                      'Time Slots',
-                                                                      style:
-                                                                          TextStyle(
-                                                                        fontSize:
-                                                                            13,
-                                                                        color: selected ==
-                                                                                index
-                                                                            ? Colors.black
-                                                                            : Colors.white,
-                                                                      ),
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      height: 8,
-                                                                    ),
-                                                                    Text(
-                                                                      'M , T , W , T , F , S , S',
-                                                                      style:
-                                                                          TextStyle(
-                                                                        fontSize:
-                                                                            8,
-                                                                        color: selected ==
-                                                                                index
-                                                                            ? Colors.black
-                                                                            : Colors.white,
-                                                                        fontStyle:
-                                                                            FontStyle.italic,
-                                                                      ),
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      height: 5,
-                                                                    ),
+                                  Column(
+                                    children: [
+                                      Image.asset(
+                                        AppImages
+                                            .yellowGrid,
+                                        width: 18,
+                                        height:
+                                        18,
+                                        color: selected ==
+                                            index
+                                            ? Colors
+                                            .black
+                                            : AppColors
+                                            .yellowColors,
+                                        fit: BoxFit
+                                            .cover,
+                                      ),
+                                      const SizedBox(
+                                        height: 2,
+                                      ),
+                                      Text(
+                                        'Available',
+                                        style:
+                                        TextStyle(
+                                          fontSize:
+                                          13,
+                                          color: selected ==
+                                              index
+                                              ? Colors.black
+                                              : Colors.white,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Time Slots',
+                                        style:
+                                        TextStyle(
+                                          fontSize:
+                                          13,
+                                          color: selected ==
+                                              index
+                                              ? Colors.black
+                                              : Colors.white,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 8,
+                                      ),
+                                      Text(
+                                        'M , T , W , T , F , S , S',
+                                        style:
+                                        TextStyle(
+                                          fontSize:
+                                          8,
+                                          color: selected ==
+                                              index
+                                              ? Colors.black
+                                              : Colors.white,
+                                          fontStyle:
+                                          FontStyle.italic,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
 
-                                                                    InkWell(
-                                                                      onTap:
-                                                                          () {
-                                                                        joinQueue =
-                                                                            "no";
-                                                                        selectedStylistName = stylist[index]
-                                                                            .fullName
-                                                                            .toString();
-                                                                        selectedStylistId = stylist[index]
-                                                                            .uid
-                                                                            .toString();
-                                                                        selectedStylistImage = stylist[index]
-                                                                            .image
-                                                                            .toString();
-                                                                        print(
-                                                                            selectedStylistName);
-                                                                        setState(
-                                                                            () {
-                                                                          customerName++;
-                                                                        });
-                                                                        showDialog(
-                                                                          context:
-                                                                              context,
-                                                                          builder:
-                                                                              (BuildContext context) {
-                                                                            return CustomDialog(
-                                                                              customerName: customerName,
-                                                                            );
-                                                                          },
-                                                                        );
-                                                                      },
-                                                                      child:
-                                                                          Container(
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(40),
-                                                                          color: selected == index
-                                                                              ? Colors.black
-                                                                              : AppColors.yellowColors,
-                                                                        ),
-                                                                        padding: const EdgeInsets.symmetric(
-                                                                            horizontal:
-                                                                                20,
-                                                                            vertical:
-                                                                                7.5),
-                                                                        child:
-                                                                            const Text(
-                                                                          'Book a slot',
-                                                                          textAlign:
-                                                                              TextAlign.center,
-                                                                          style:
-                                                                              TextStyle(
-                                                                            color:
-                                                                                Colors.white,
-                                                                            fontSize:
-                                                                                12,
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    )
-
-                                                                    // ghjk
-                                                                    // _buildButton(
-                                                                    //
-                                                                    //   text: 'Book A Slot',
-                                                                    //   color: selected == i
-                                                                    //       ? Colors.black
-                                                                    //       : AppColors.yellowColors,
-                                                                    //
-                                                                    //   i: i,
-                                                                    // )
-                                                                  ],
-                                                                ),
-
-                                                                const Spacer(),
-                                                                Column(
-                                                                  children: [
-                                                                    if (stylist[index]
-                                                                            .image
-                                                                            .toString() !=
-                                                                        'null')
-                                                                      Container(
-                                                                        height:
-                                                                            65,
-                                                                        width:
-                                                                            65,
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          border:
-                                                                              Border.all(color: AppColors.yellowColors),
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(120),
-                                                                          image:
-                                                                              DecorationImage(
-                                                                            image:
-                                                                                NetworkImage(
-                                                                              stylist[index].image.toString(),
-                                                                            ),
-                                                                            fit:
-                                                                                BoxFit.cover,
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    const SizedBox(
-                                                                      height:
-                                                                          10,
-                                                                    ),
-                                                                    Text(
-                                                                      stylist[index]
-                                                                          .fullName
-                                                                          .toString(),
-                                                                      style:
-                                                                          const TextStyle(
-                                                                        color: Colors
-                                                                            .white,
-                                                                        fontSize:
-                                                                            14,
-                                                                        fontWeight:
-                                                                            FontWeight.bold,
-                                                                      ),
-                                                                    )
-                                                                  ],
-                                                                ),
-                                                                const Spacer(),
-
-                                                                Column(
-                                                                  children: [
-                                                                    Image.asset(
-                                                                      AppImages
-                                                                          .yellowCalender,
-                                                                      width: 18,
-                                                                      height:
-                                                                          18,
-                                                                      color: selected ==
-                                                                              index
-                                                                          ? Colors
-                                                                              .black
-                                                                          : AppColors
-                                                                              .yellowColors,
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      height: 2,
-                                                                    ),
-                                                                    if (minutesLeft
-                                                                        .isNotEmpty)
-                                                                      Text(
-                                                                        'Empty Seat',
-                                                                        style:
-                                                                            TextStyle(
-                                                                          fontSize:
-                                                                              13,
-                                                                          color: selected == index
-                                                                              ? Colors.black
-                                                                              : Colors.white,
-                                                                        ),
-                                                                      ),
-                                                                    // if(minutesLeft.isNotEmpty)
-                                                                    if (int.parse(
-                                                                            freeSlots1[index].toString()) >
-                                                                        0)
-                                                                      Text(
-                                                                        'Available in ${freeSlots1[index].toString()} min',
-                                                                        style:
-                                                                            TextStyle(
-                                                                          fontSize:
-                                                                              13,
-                                                                          color: selected == index
-                                                                              ? Colors.black
-                                                                              : Colors.white,
-                                                                        ),
-                                                                      ),
-                                                                    if (int.parse(
-                                                                            freeSlots1[index].toString()) <
-                                                                        1)
-                                                                      Text(
-                                                                        'Available now',
-                                                                        style:
-                                                                            TextStyle(
-                                                                          fontSize:
-                                                                              13,
-                                                                          color: selected == index
-                                                                              ? Colors.black
-                                                                              : Colors.white,
-                                                                        ),
-                                                                      ),
-                                                                    const SizedBox(
-                                                                      height: 8,
-                                                                    ),
-                                                                    if (quesFinal
-                                                                        .isNotEmpty)
-                                                                      Text(
-                                                                        '${quesFinal[index].toString()} customers in queue',
-                                                                        style:
-                                                                            TextStyle(
-                                                                          fontSize:
-                                                                              8,
-                                                                          color: selected == index
-                                                                              ? Colors.black
-                                                                              : Colors.white,
-                                                                          fontStyle:
-                                                                              FontStyle.italic,
-                                                                        ),
-                                                                      ),
-                                                                    const SizedBox(
-                                                                      height: 5,
-                                                                    ),
-                                                                    _buildButton(
-                                                                      text:
-                                                                          'Join Now',
-                                                                      color: Colors
-                                                                          .green,
-                                                                      i: index,
-                                                                    )
-                                                                  ],
-                                                                )
-
-                                                                // _buildColumn(
-                                                                //   url: AppImages.yellowCalender,
-                                                                //   t1: 'Empty Seat',
-                                                                //   t2: 'Available in 20 min',
-                                                                //   t3: '${i + 0} customer in queue',
-                                                                //   btnColors: Colors.green,
-                                                                //   btnText: 'Join Now',
-                                                                //   i: i,
-                                                                // ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        )
-                                                      : Container(),
-
-                                              //  Center(
-                                              //     child: Text(
-                                              //       "No In Shop Barbers available",
-                                              //       style: TextStyle(
-                                              //           color: Colors.white),
-                                              //     ),
-                                              //   )
-                                            );
-                                          })
-                                      : const Center(
-                                          child: Text(
-                                            "No in Shop Barbers available",
+                                      InkWell(
+                                        onTap:
+                                            () {
+                                          joinQueue =
+                                          "no";
+                                          selectedStylistName = stylist[index]
+                                              .fullName
+                                              .toString();
+                                          selectedStylistId = stylist[index]
+                                              .uid
+                                              .toString();
+                                          selectedStylistImage = stylist[index]
+                                              .image
+                                              .toString();
+                                          print(
+                                              selectedStylistName);
+                                          setState(
+                                                  () {
+                                                customerName++;
+                                              });
+                                          showDialog(
+                                            context:
+                                            context,
+                                            builder:
+                                                (BuildContext context) {
+                                              return CustomDialog(
+                                                customerName: customerName,
+                                              );
+                                            },
+                                          );
+                                        },
+                                        child:
+                                        Container(
+                                          decoration:
+                                          BoxDecoration(
+                                            borderRadius:
+                                            BorderRadius.circular(40),
+                                            color: selected == index
+                                                ? Colors.black
+                                                : AppColors.yellowColors,
+                                          ),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal:
+                                              20,
+                                              vertical:
+                                              7.5),
+                                          child:
+                                          const Text(
+                                            'Book a slot',
+                                            textAlign:
+                                            TextAlign.center,
                                             style:
-                                                TextStyle(color: Colors.white),
+                                            TextStyle(
+                                              color:
+                                              Colors.white,
+                                              fontSize:
+                                              12,
+                                            ),
                                           ),
                                         ),
+                                      )
 
-                                  stylist
-                                          .where((element) =>
-                                              element.barberStatus ==
-                                              "Home Visit")
-                                          .isNotEmpty ||
-                                      stylist
-                                          .where((element) =>
-                                      element.barberStatus ==
-                                          "Both")
-                                          .isNotEmpty
-                                      ? ListView.builder(
-                                          shrinkWrap: true,
-                                          itemCount: stylist.length,
-                                          // .where((element) =>
-                                          //     element.barberStatus == "Home Visit")
-                                          // .length,
-                                          itemBuilder: (context, index) {
-                                            return Container(
-                                                child:
-                                                    stylist[index]
-                                                                .barberStatus ==
-                                                            "Home Visit" ||  stylist[index]
-                                                        .barberStatus ==
-                                                        "Both"
-                                                        ? InkWell(
-                                                            onTap: () {
-                                                              selected = index;
-                                                              setState(() {});
-                                                            },
-                                                            child: Container(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .symmetric(
-                                                                horizontal: 10,
-                                                                vertical: 20,
-                                                              ),
-                                                              margin:
-                                                                  const EdgeInsets
-                                                                      .only(
-                                                                left: 10,
-                                                                right: 10,
-                                                                bottom: 5,
-                                                              ),
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: selected ==
-                                                                        index
-                                                                    ? AppColors
-                                                                        .yellowColors
-                                                                    : Colors
-                                                                        .black26,
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            20),
-                                                                border:
-                                                                    Border.all(
-                                                                  width: 2,
-                                                                  color: index ==
-                                                                          0
-                                                                      ? Colors
-                                                                          .green
-                                                                      : AppColors
-                                                                          .yellowColors,
-                                                                ),
-                                                              ),
-                                                              child: Row(
-                                                                children: [
-                                                                  Column(
-                                                                    children: [
-                                                                      Image
-                                                                          .asset(
-                                                                        AppImages
-                                                                            .yellowGrid,
-                                                                        width:
-                                                                            18,
-                                                                        height:
-                                                                            18,
-                                                                        color: selected ==
-                                                                                index
-                                                                            ? Colors.black
-                                                                            : AppColors.yellowColors,
-                                                                        fit: BoxFit
-                                                                            .cover,
-                                                                      ),
-                                                                      const SizedBox(
-                                                                        height:
-                                                                            2,
-                                                                      ),
-                                                                      Text(
-                                                                        'Available',
-                                                                        style:
-                                                                            TextStyle(
-                                                                          fontSize:
-                                                                              13,
-                                                                          color: selected == index
-                                                                              ? Colors.black
-                                                                              : Colors.white,
-                                                                        ),
-                                                                      ),
-                                                                      Text(
-                                                                        'Time Slots',
-                                                                        style:
-                                                                            TextStyle(
-                                                                          fontSize:
-                                                                              13,
-                                                                          color: selected == index
-                                                                              ? Colors.black
-                                                                              : Colors.white,
-                                                                        ),
-                                                                      ),
-                                                                      const SizedBox(
-                                                                        height:
-                                                                            8,
-                                                                      ),
-                                                                      Text(
-                                                                        'M , T , W , T , F , S , S',
-                                                                        style:
-                                                                            TextStyle(
-                                                                          fontSize:
-                                                                              8,
-                                                                          color: selected == index
-                                                                              ? Colors.black
-                                                                              : Colors.white,
-                                                                          fontStyle:
-                                                                              FontStyle.italic,
-                                                                        ),
-                                                                      ),
-                                                                      const SizedBox(
-                                                                        height:
-                                                                            5,
-                                                                      ),
+                                      // ghjk
+                                      // _buildButton(
+                                      //
+                                      //   text: 'Book A Slot',
+                                      //   color: selected == i
+                                      //       ? Colors.black
+                                      //       : AppColors.yellowColors,
+                                      //
+                                      //   i: i,
+                                      // )
+                                    ],
+                                  ),
 
-                                                                      InkWell(
-                                                                        onTap:
-                                                                            () {
-                                                                          joinQueue =
-                                                                              "no";
-                                                                          selectedStylistName = stylist[index]
-                                                                              .fullName
-                                                                              .toString();
-                                                                          selectedStylistId = stylist[index]
-                                                                              .uid
-                                                                              .toString();
-                                                                          selectedStylistImage = stylist[index]
-                                                                              .image
-                                                                              .toString();
-                                                                          print(
-                                                                              selectedStylistName);
-                                                                          setState(
-                                                                              () {
-                                                                            customerName++;
-                                                                          });
-                                                                          showDialog(
-                                                                            context:
-                                                                                context,
-                                                                            builder:
-                                                                                (BuildContext context) {
-                                                                              return CustomDialog(
-                                                                                customerName: customerName,
-                                                                              );
-                                                                            },
-                                                                          );
-                                                                        },
-                                                                        child:
-                                                                            Container(
-                                                                          decoration:
-                                                                              BoxDecoration(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(40),
-                                                                            color: selected == index
-                                                                                ? Colors.black
-                                                                                : AppColors.yellowColors,
-                                                                          ),
-                                                                          padding: const EdgeInsets.symmetric(
-                                                                              horizontal: 20,
-                                                                              vertical: 7.5),
-                                                                          child:
-                                                                              const Text(
-                                                                            'Book a slot',
-                                                                            textAlign:
-                                                                                TextAlign.center,
-                                                                            style:
-                                                                                TextStyle(
-                                                                              color: Colors.white,
-                                                                              fontSize: 12,
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      )
-
-                                                                      // ghjk
-                                                                      // _buildButton(
-                                                                      //
-                                                                      //   text: 'Book A Slot',
-                                                                      //   color: selected == i
-                                                                      //       ? Colors.black
-                                                                      //       : AppColors.yellowColors,
-                                                                      //
-                                                                      //   i: i,
-                                                                      // )
-                                                                    ],
-                                                                  ),
-
-                                                                  const Spacer(),
-                                                                  Column(
-                                                                    children: [
-                                                                      if (stylist[index]
-                                                                              .image
-                                                                              .toString() !=
-                                                                          'null')
-                                                                        Container(
-                                                                          height:
-                                                                              65,
-                                                                          width:
-                                                                              65,
-                                                                          decoration:
-                                                                              BoxDecoration(
-                                                                            border:
-                                                                                Border.all(color: AppColors.yellowColors),
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(120),
-                                                                            image:
-                                                                                DecorationImage(
-                                                                              image: NetworkImage(
-                                                                                stylist[index].image.toString(),
-                                                                              ),
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      const SizedBox(
-                                                                        height:
-                                                                            10,
-                                                                      ),
-                                                                      Text(
-                                                                        stylist[index]
-                                                                            .fullName
-                                                                            .toString(),
-                                                                        style:
-                                                                            const TextStyle(
-                                                                          color:
-                                                                              Colors.white,
-                                                                          fontSize:
-                                                                              14,
-                                                                          fontWeight:
-                                                                              FontWeight.bold,
-                                                                        ),
-                                                                      )
-                                                                    ],
-                                                                  ),
-                                                                  const Spacer(),
-
-                                                                  Column(
-                                                                    children: [
-                                                                      Image
-                                                                          .asset(
-                                                                        AppImages
-                                                                            .yellowCalender,
-                                                                        width:
-                                                                            18,
-                                                                        height:
-                                                                            18,
-                                                                        color: selected ==
-                                                                                index
-                                                                            ? Colors.black
-                                                                            : AppColors.yellowColors,
-                                                                        fit: BoxFit
-                                                                            .cover,
-                                                                      ),
-                                                                      const SizedBox(
-                                                                        height:
-                                                                            2,
-                                                                      ),
-                                                                      if (minutesLeft
-                                                                          .isNotEmpty)
-                                                                        Text(
-                                                                          'Empty Seat',
-                                                                          style:
-                                                                              TextStyle(
-                                                                            fontSize:
-                                                                                13,
-                                                                            color: selected == index
-                                                                                ? Colors.black
-                                                                                : Colors.white,
-                                                                          ),
-                                                                        ),
-                                                                      // if(minutesLeft.isNotEmpty)
-                                                                      if (int.parse(
-                                                                              freeSlots1[index].toString()) >
-                                                                          0)
-                                                                        Text(
-                                                                          'Available in ${freeSlots1[index].toString()} min',
-                                                                          style:
-                                                                              TextStyle(
-                                                                            fontSize:
-                                                                                13,
-                                                                            color: selected == index
-                                                                                ? Colors.black
-                                                                                : Colors.white,
-                                                                          ),
-                                                                        ),
-                                                                      if (int.parse(
-                                                                              freeSlots1[index].toString()) <
-                                                                          1)
-                                                                        Text(
-                                                                          'Available now',
-                                                                          style:
-                                                                              TextStyle(
-                                                                            fontSize:
-                                                                                13,
-                                                                            color: selected == index
-                                                                                ? Colors.black
-                                                                                : Colors.white,
-                                                                          ),
-                                                                        ),
-                                                                      const SizedBox(
-                                                                        height:
-                                                                            8,
-                                                                      ),
-                                                                      if (quesFinal
-                                                                          .isNotEmpty)
-                                                                        Text(
-                                                                          '${quesFinal[index].toString()} customers in queue',
-                                                                          style:
-                                                                              TextStyle(
-                                                                            fontSize:
-                                                                                8,
-                                                                            color: selected == index
-                                                                                ? Colors.black
-                                                                                : Colors.white,
-                                                                            fontStyle:
-                                                                                FontStyle.italic,
-                                                                          ),
-                                                                        ),
-                                                                      const SizedBox(
-                                                                        height:
-                                                                            5,
-                                                                      ),
-                                                                      _buildButton(
-                                                                        text:
-                                                                            'Join Now',
-                                                                        color: Colors
-                                                                            .green,
-                                                                        i: index,
-                                                                      )
-                                                                    ],
-                                                                  )
-
-                                                                  // _buildColumn(
-                                                                  //   url: AppImages.yellowCalender,
-                                                                  //   t1: 'Empty Seat',
-                                                                  //   t2: 'Available in 20 min',
-                                                                  //   t3: '${i + 0} customer in queue',
-                                                                  //   btnColors: Colors.green,
-                                                                  //   btnText: 'Join Now',
-                                                                  //   i: i,
-                                                                  // ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          )
-                                                        : Container()
-
-                                                // Center(
-                                                //     child: Text(
-                                                //       "No Home Visit Barbers available",
-                                                //       style: TextStyle(
-                                                //           color: Colors.white),
-                                                //     ),
-                                                //   )
-                                                );
-                                          })
-                                      : const Center(
-                                          child: Text(
-                                            "No Home Visit Barbers available",
-                                            style:
-                                                TextStyle(color: Colors.white),
+                                  const Spacer(),
+                                  Column(
+                                    children: [
+                                      if (stylist[index]
+                                          .image
+                                          .toString() !=
+                                          'null')
+                                        Container(
+                                          height:
+                                          65,
+                                          width:
+                                          65,
+                                          decoration:
+                                          BoxDecoration(
+                                            border:
+                                            Border.all(color: AppColors.yellowColors),
+                                            borderRadius:
+                                            BorderRadius.circular(120),
+                                            image:
+                                            DecorationImage(
+                                              image:
+                                              NetworkImage(
+                                                stylist[index].image.toString(),
+                                              ),
+                                              fit:
+                                              BoxFit.cover,
+                                            ),
                                           ),
                                         ),
+                                      const SizedBox(
+                                        height:
+                                        10,
+                                      ),
+                                      Text(
+                                        stylist[index]
+                                            .fullName
+                                            .toString(),
+                                        style:
+                                        const TextStyle(
+                                          color: Colors
+                                              .white,
+                                          fontSize:
+                                          14,
+                                          fontWeight:
+                                          FontWeight.bold,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  const Spacer(),
 
-                                  // stylist
-                                  //         .where((element) =>
-                                  //             element.barberStatus == "Both")
-                                  //         .isNotEmpty
-                                  //     ? ListView.builder(
-                                  //         shrinkWrap: true,
-                                  //         itemCount: stylist.length,
-                                  //         // .where((element) =>
-                                  //         //     element.barberStatus == "Both")
-                                  //         // .length,
-                                  //         itemBuilder: (context, index) {
-                                  //           return Container(
-                                  //               child:
-                                  //                   stylist[index]
-                                  //                               .barberStatus ==
-                                  //                           "Both"
-                                  //                       ? InkWell(
-                                  //                           onTap: () {
-                                  //                             selected = index;
-                                  //                             setState(() {});
-                                  //                           },
-                                  //                           child: Container(
-                                  //                             padding:
-                                  //                                 const EdgeInsets
-                                  //                                     .symmetric(
-                                  //                               horizontal: 10,
-                                  //                               vertical: 20,
-                                  //                             ),
-                                  //                             margin:
-                                  //                                 const EdgeInsets
-                                  //                                     .only(
-                                  //                               left: 10,
-                                  //                               right: 10,
-                                  //                               bottom: 5,
-                                  //                             ),
-                                  //                             decoration:
-                                  //                                 BoxDecoration(
-                                  //                               color: selected ==
-                                  //                                       index
-                                  //                                   ? AppColors
-                                  //                                       .yellowColors
-                                  //                                   : Colors
-                                  //                                       .black26,
-                                  //                               borderRadius:
-                                  //                                   BorderRadius
-                                  //                                       .circular(
-                                  //                                           20),
-                                  //                               border:
-                                  //                                   Border.all(
-                                  //                                 width: 2,
-                                  //                                 color: index ==
-                                  //                                         0
-                                  //                                     ? Colors
-                                  //                                         .green
-                                  //                                     : AppColors
-                                  //                                         .yellowColors,
-                                  //                               ),
-                                  //                             ),
-                                  //                             child: Row(
-                                  //                               children: [
-                                  //                                 Column(
-                                  //                                   children: [
-                                  //                                     Image
-                                  //                                         .asset(
-                                  //                                       AppImages
-                                  //                                           .yellowGrid,
-                                  //                                       width:
-                                  //                                           18,
-                                  //                                       height:
-                                  //                                           18,
-                                  //                                       color: selected ==
-                                  //                                               index
-                                  //                                           ? Colors.black
-                                  //                                           : AppColors.yellowColors,
-                                  //                                       fit: BoxFit
-                                  //                                           .cover,
-                                  //                                     ),
-                                  //                                     const SizedBox(
-                                  //                                       height:
-                                  //                                           2,
-                                  //                                     ),
-                                  //                                     Text(
-                                  //                                       'Available',
-                                  //                                       style:
-                                  //                                           TextStyle(
-                                  //                                         fontSize:
-                                  //                                             13,
-                                  //                                         color: selected == index
-                                  //                                             ? Colors.black
-                                  //                                             : Colors.white,
-                                  //                                       ),
-                                  //                                     ),
-                                  //                                     Text(
-                                  //                                       'Time Slots',
-                                  //                                       style:
-                                  //                                           TextStyle(
-                                  //                                         fontSize:
-                                  //                                             13,
-                                  //                                         color: selected == index
-                                  //                                             ? Colors.black
-                                  //                                             : Colors.white,
-                                  //                                       ),
-                                  //                                     ),
-                                  //                                     const SizedBox(
-                                  //                                       height:
-                                  //                                           8,
-                                  //                                     ),
-                                  //                                     Text(
-                                  //                                       'M , T , W , T , F , S , S',
-                                  //                                       style:
-                                  //                                           TextStyle(
-                                  //                                         fontSize:
-                                  //                                             8,
-                                  //                                         color: selected == index
-                                  //                                             ? Colors.black
-                                  //                                             : Colors.white,
-                                  //                                         fontStyle:
-                                  //                                             FontStyle.italic,
-                                  //                                       ),
-                                  //                                     ),
-                                  //                                     const SizedBox(
-                                  //                                       height:
-                                  //                                           5,
-                                  //                                     ),
-                                  //
-                                  //                                     InkWell(
-                                  //                                       onTap:
-                                  //                                           () {
-                                  //                                         joinQueue =
-                                  //                                             "no";
-                                  //                                         selectedStylistName = stylist[index]
-                                  //                                             .fullName
-                                  //                                             .toString();
-                                  //                                         selectedStylistId = stylist[index]
-                                  //                                             .uid
-                                  //                                             .toString();
-                                  //                                         selectedStylistImage = stylist[index]
-                                  //                                             .image
-                                  //                                             .toString();
-                                  //                                         print(
-                                  //                                             selectedStylistName);
-                                  //                                         setState(
-                                  //                                             () {
-                                  //                                           customerName++;
-                                  //                                         });
-                                  //                                         showDialog(
-                                  //                                           context:
-                                  //                                               context,
-                                  //                                           builder:
-                                  //                                               (BuildContext context) {
-                                  //                                             return CustomDialog(
-                                  //                                               customerName: customerName,
-                                  //                                             );
-                                  //                                           },
-                                  //                                         );
-                                  //                                       },
-                                  //                                       child:
-                                  //                                           Container(
-                                  //                                         decoration:
-                                  //                                             BoxDecoration(
-                                  //                                           borderRadius:
-                                  //                                               BorderRadius.circular(40),
-                                  //                                           color: selected == index
-                                  //                                               ? Colors.black
-                                  //                                               : AppColors.yellowColors,
-                                  //                                         ),
-                                  //                                         padding: const EdgeInsets.symmetric(
-                                  //                                             horizontal: 20,
-                                  //                                             vertical: 7.5),
-                                  //                                         child:
-                                  //                                             const Text(
-                                  //                                           'Book a slot',
-                                  //                                           textAlign:
-                                  //                                               TextAlign.center,
-                                  //                                           style:
-                                  //                                               TextStyle(
-                                  //                                             color: Colors.white,
-                                  //                                             fontSize: 12,
-                                  //                                           ),
-                                  //                                         ),
-                                  //                                       ),
-                                  //                                     )
-                                  //
-                                  //                                     // ghjk
-                                  //                                     // _buildButton(
-                                  //                                     //
-                                  //                                     //   text: 'Book A Slot',
-                                  //                                     //   color: selected == i
-                                  //                                     //       ? Colors.black
-                                  //                                     //       : AppColors.yellowColors,
-                                  //                                     //
-                                  //                                     //   i: i,
-                                  //                                     // )
-                                  //                                   ],
-                                  //                                 ),
-                                  //
-                                  //                                 const Spacer(),
-                                  //                                 Column(
-                                  //                                   children: [
-                                  //                                     if (stylist[index]
-                                  //                                             .image
-                                  //                                             .toString() !=
-                                  //                                         'null')
-                                  //                                       Container(
-                                  //                                         height:
-                                  //                                             65,
-                                  //                                         width:
-                                  //                                             65,
-                                  //                                         decoration:
-                                  //                                             BoxDecoration(
-                                  //                                           border:
-                                  //                                               Border.all(color: AppColors.yellowColors),
-                                  //                                           borderRadius:
-                                  //                                               BorderRadius.circular(120),
-                                  //                                           image:
-                                  //                                               DecorationImage(
-                                  //                                             image: NetworkImage(
-                                  //                                               stylist[index].image.toString(),
-                                  //                                             ),
-                                  //                                             fit: BoxFit.cover,
-                                  //                                           ),
-                                  //                                         ),
-                                  //                                       ),
-                                  //                                     const SizedBox(
-                                  //                                       height:
-                                  //                                           10,
-                                  //                                     ),
-                                  //                                     Text(
-                                  //                                       stylist[index]
-                                  //                                           .fullName
-                                  //                                           .toString(),
-                                  //                                       style:
-                                  //                                           const TextStyle(
-                                  //                                         color:
-                                  //                                             Colors.white,
-                                  //                                         fontSize:
-                                  //                                             14,
-                                  //                                         fontWeight:
-                                  //                                             FontWeight.bold,
-                                  //                                       ),
-                                  //                                     )
-                                  //                                   ],
-                                  //                                 ),
-                                  //                                 const Spacer(),
-                                  //
-                                  //                                 Column(
-                                  //                                   children: [
-                                  //                                     Image.asset(
-                                  //                                       AppImages
-                                  //                                           .yellowCalender,
-                                  //                                       width:
-                                  //                                           18,
-                                  //                                       height:
-                                  //                                           18,
-                                  //                                       color: selected ==
-                                  //                                               index
-                                  //                                           ? Colors.black
-                                  //                                           : AppColors.yellowColors,
-                                  //                                       fit: BoxFit
-                                  //                                           .cover,
-                                  //                                     ),
-                                  //                                     const SizedBox(
-                                  //                                       height:
-                                  //                                           2,
-                                  //                                     ),
-                                  //                                     if (minutesLeft
-                                  //                                         .isNotEmpty)
-                                  //                                       Text(
-                                  //                                         'Empty Seat',
-                                  //                                         style:
-                                  //                                             TextStyle(
-                                  //                                           fontSize:
-                                  //                                               13,
-                                  //                                           color: selected == index
-                                  //                                               ? Colors.black
-                                  //                                               : Colors.white,
-                                  //                                         ),
-                                  //                                       ),
-                                  //                                     // if(minutesLeft.isNotEmpty)
-                                  //                                     if (int.parse(
-                                  //                                             freeSlots1[index].toString()) >
-                                  //                                         0)
-                                  //                                       Text(
-                                  //                                         'Available in ${freeSlots1[index].toString()} min',
-                                  //                                         style:
-                                  //                                             TextStyle(
-                                  //                                           fontSize:
-                                  //                                               13,
-                                  //                                           color: selected == index
-                                  //                                               ? Colors.black
-                                  //                                               : Colors.white,
-                                  //                                         ),
-                                  //                                       ),
-                                  //                                     if (int.parse(freeSlots1[index].toString()) <1)
-                                  //                                       Text(
-                                  //                                         'Available now',
-                                  //                                         style:
-                                  //                                             TextStyle(
-                                  //                                           fontSize:
-                                  //                                               13,
-                                  //                                           color: selected == index
-                                  //                                               ? Colors.black
-                                  //                                               : Colors.white,
-                                  //                                         ),
-                                  //                                       ),
-                                  //                                     const SizedBox(height:8,),
-                                  //                                     if (quesFinal
-                                  //                                         .isNotEmpty)
-                                  //                                       Text('${quesFinal[index].toString()} customers in queue',
-                                  //                                         style:TextStyle(
-                                  //                                           fontSize:
-                                  //                                               8,
-                                  //                                           color: selected == index
-                                  //                                               ? Colors.black
-                                  //                                               : Colors.white,
-                                  //                                           fontStyle:
-                                  //                                               FontStyle.italic,
-                                  //                                         ),
-                                  //                                       ),
-                                  //                                     const SizedBox(height:5,),
-                                  //                                     _buildButton(text:'Join Now',color: Colors.green,i: index,)
-                                  //                                   ],
-                                  //                                 )
-                                  //
-                                  //                                 // _buildColumn(
-                                  //                                 //   url: AppImages.yellowCalender,
-                                  //                                 //   t1: 'Empty Seat',
-                                  //                                 //   t2: 'Available in 20 min',
-                                  //                                 //   t3: '${i + 0} customer in queue',
-                                  //                                 //   btnColors: Colors.green,
-                                  //                                 //   btnText: 'Join Now',
-                                  //                                 //   i: i,
-                                  //                                 // ),
-                                  //                               ],
-                                  //                             ),
-                                  //                           ),
-                                  //                         )
-                                  //                       : Container()
-                                  //
-                                  //               // Center(
-                                  //               //     child: Text(
-                                  //               //       "No In Shop Barbers available",
-                                  //               //       style: TextStyle(
-                                  //               //           color: Colors.white),
-                                  //               //     ),
-                                  //               //   )
-                                  //               );
-                                  //         })
-                                  //     : const Center(
-                                  //         child: Text(
-                                  //           "No barbers available",
-                                  //           style:
-                                  //               TextStyle(color: Colors.white),
-                                  //         ),
-                                  //       )
+                                  Column(
+                                    children: [
+                                      Image.asset(
+                                        AppImages
+                                            .yellowCalender,
+                                        width: 18,
+                                        height:
+                                        18,
+                                        color: selected ==
+                                            index
+                                            ? Colors
+                                            .black
+                                            : AppColors
+                                            .yellowColors,
+                                        fit: BoxFit
+                                            .cover,
+                                      ),
+                                      const SizedBox(
+                                        height: 2,
+                                      ),
+                                      if (minutesLeft
+                                          .isNotEmpty)
+                                        Text(
+                                          'Empty Seat',
+                                          style:
+                                          TextStyle(
+                                            fontSize:
+                                            13,
+                                            color: selected == index
+                                                ? Colors.black
+                                                : Colors.white,
+                                          ),
+                                        ),
+                                      // if(minutesLeft.isNotEmpty)
+                                      if (int.parse(
+                                          freeSlots1[index].toString()) >
+                                          0)
+                                        Text(
+                                          'Available in ${freeSlots1[index].toString()} min',
+                                          style:
+                                          TextStyle(
+                                            fontSize:
+                                            13,
+                                            color: selected == index
+                                                ? Colors.black
+                                                : Colors.white,
+                                          ),
+                                        ),
+                                      if (int.parse(
+                                          freeSlots1[index].toString()) <
+                                          1)
+                                        Text(
+                                          'Available now',
+                                          style:
+                                          TextStyle(
+                                            fontSize:
+                                            13,
+                                            color: selected == index
+                                                ? Colors.black
+                                                : Colors.white,
+                                          ),
+                                        ),
+                                      const SizedBox(
+                                        height: 8,
+                                      ),
+                                      if (quesFinal
+                                          .isNotEmpty)
+                                        Text(
+                                          '${quesFinal[index].toString()} customers in queue',
+                                          style:
+                                          TextStyle(
+                                            fontSize:
+                                            8,
+                                            color: selected == index
+                                                ? Colors.black
+                                                : Colors.white,
+                                            fontStyle:
+                                            FontStyle.italic,
+                                          ),
+                                        ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      _buildButton(
+                                        text:
+                                        'Join Now',
+                                        color: Colors
+                                            .green,
+                                        i: index,
+                                      )
+                                    ],
+                                  )
 
-
+                                  // _buildColumn(
+                                  //   url: AppImages.yellowCalender,
+                                  //   t1: 'Empty Seat',
+                                  //   t2: 'Available in 20 min',
+                                  //   t3: '${i + 0} customer in queue',
+                                  //   btnColors: Colors.green,
+                                  //   btnText: 'Join Now',
+                                  //   i: i,
+                                  // ),
                                 ],
                               ),
                             ),
-                          )
+                          ),
+
+                          if(stylist[index].barberStatus.toString() =="Home Visit" && homeVisit || stylist[index].barberStatus.toString() =="Both" && homeVisit)
+                            InkWell(
+                              onTap: () {
+                                selected = index;
+                                setState(() {});
+                              },
+                              child: Container(
+                                padding:
+                                const EdgeInsets
+                                    .symmetric(
+                                  horizontal: 10,
+                                  vertical: 20,
+                                ),
+                                margin:
+                                const EdgeInsets
+                                    .only(
+                                  left: 10,
+                                  right: 10,
+                                  bottom: 5,
+                                ),
+                                decoration:
+                                BoxDecoration(
+                                  color: selected ==
+                                      index
+                                      ? AppColors
+                                      .yellowColors
+                                      : Colors
+                                      .black26,
+                                  borderRadius:
+                                  BorderRadius
+                                      .circular(
+                                      20),
+                                  border:
+                                  Border.all(
+                                    width: 2,
+                                    color: index ==
+                                        0
+                                        ? Colors
+                                        .green
+                                        : AppColors
+                                        .yellowColors,
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Image.asset(
+                                          AppImages
+                                              .yellowGrid,
+                                          width: 18,
+                                          height:
+                                          18,
+                                          color: selected ==
+                                              index
+                                              ? Colors
+                                              .black
+                                              : AppColors
+                                              .yellowColors,
+                                          fit: BoxFit
+                                              .cover,
+                                        ),
+                                        const SizedBox(
+                                          height: 2,
+                                        ),
+                                        Text(
+                                          'Available',
+                                          style:
+                                          TextStyle(
+                                            fontSize:
+                                            13,
+                                            color: selected ==
+                                                index
+                                                ? Colors.black
+                                                : Colors.white,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Time Slots',
+                                          style:
+                                          TextStyle(
+                                            fontSize:
+                                            13,
+                                            color: selected ==
+                                                index
+                                                ? Colors.black
+                                                : Colors.white,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 8,
+                                        ),
+                                        Text(
+                                          'M , T , W , T , F , S , S',
+                                          style:
+                                          TextStyle(
+                                            fontSize:
+                                            8,
+                                            color: selected ==
+                                                index
+                                                ? Colors.black
+                                                : Colors.white,
+                                            fontStyle:
+                                            FontStyle.italic,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+
+                                        InkWell(
+                                          onTap:
+                                              () {
+                                            joinQueue =
+                                            "no";
+                                            selectedStylistName = stylist[index]
+                                                .fullName
+                                                .toString();
+                                            selectedStylistId = stylist[index]
+                                                .uid
+                                                .toString();
+                                            selectedStylistImage = stylist[index]
+                                                .image
+                                                .toString();
+                                            print(
+                                                selectedStylistName);
+                                            setState(
+                                                    () {
+                                                  customerName++;
+                                                });
+                                            showDialog(
+                                              context:
+                                              context,
+                                              builder:
+                                                  (BuildContext context) {
+                                                return CustomDialog(
+                                                  customerName: customerName,
+                                                );
+                                              },
+                                            );
+                                          },
+                                          child:
+                                          Container(
+                                            decoration:
+                                            BoxDecoration(
+                                              borderRadius:
+                                              BorderRadius.circular(40),
+                                              color: selected == index
+                                                  ? Colors.black
+                                                  : AppColors.yellowColors,
+                                            ),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal:
+                                                20,
+                                                vertical:
+                                                7.5),
+                                            child:
+                                            const Text(
+                                              'Book a slot',
+                                              textAlign:
+                                              TextAlign.center,
+                                              style:
+                                              TextStyle(
+                                                color:
+                                                Colors.white,
+                                                fontSize:
+                                                12,
+                                              ),
+                                            ),
+                                          ),
+                                        )
+
+                                        // ghjk
+                                        // _buildButton(
+                                        //
+                                        //   text: 'Book A Slot',
+                                        //   color: selected == i
+                                        //       ? Colors.black
+                                        //       : AppColors.yellowColors,
+                                        //
+                                        //   i: i,
+                                        // )
+                                      ],
+                                    ),
+
+                                    const Spacer(),
+                                    Column(
+                                      children: [
+                                        if (stylist[index]
+                                            .image
+                                            .toString() !=
+                                            'null')
+                                          Container(
+                                            height:
+                                            65,
+                                            width:
+                                            65,
+                                            decoration:
+                                            BoxDecoration(
+                                              border:
+                                              Border.all(color: AppColors.yellowColors),
+                                              borderRadius:
+                                              BorderRadius.circular(120),
+                                              image:
+                                              DecorationImage(
+                                                image:
+                                                NetworkImage(
+                                                  stylist[index].image.toString(),
+                                                ),
+                                                fit:
+                                                BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                        const SizedBox(
+                                          height:
+                                          10,
+                                        ),
+                                        Text(
+                                          stylist[index]
+                                              .fullName
+                                              .toString(),
+                                          style:
+                                          const TextStyle(
+                                            color: Colors
+                                                .white,
+                                            fontSize:
+                                            14,
+                                            fontWeight:
+                                            FontWeight.bold,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    const Spacer(),
+
+                                    Column(
+                                      children: [
+                                        Image.asset(
+                                          AppImages
+                                              .yellowCalender,
+                                          width: 18,
+                                          height:
+                                          18,
+                                          color: selected ==
+                                              index
+                                              ? Colors
+                                              .black
+                                              : AppColors
+                                              .yellowColors,
+                                          fit: BoxFit
+                                              .cover,
+                                        ),
+                                        const SizedBox(
+                                          height: 2,
+                                        ),
+                                        if (minutesLeft
+                                            .isNotEmpty)
+                                          Text(
+                                            'Empty Seat',
+                                            style:
+                                            TextStyle(
+                                              fontSize:
+                                              13,
+                                              color: selected == index
+                                                  ? Colors.black
+                                                  : Colors.white,
+                                            ),
+                                          ),
+                                        // if(minutesLeft.isNotEmpty)
+                                        if (int.parse(
+                                            freeSlots1[index].toString()) >
+                                            0)
+                                          Text(
+                                            'Available in ${freeSlots1[index].toString()} min',
+                                            style:
+                                            TextStyle(
+                                              fontSize:
+                                              13,
+                                              color: selected == index
+                                                  ? Colors.black
+                                                  : Colors.white,
+                                            ),
+                                          ),
+                                        if (int.parse(
+                                            freeSlots1[index].toString()) <
+                                            1)
+                                          Text(
+                                            'Available now',
+                                            style:
+                                            TextStyle(
+                                              fontSize:
+                                              13,
+                                              color: selected == index
+                                                  ? Colors.black
+                                                  : Colors.white,
+                                            ),
+                                          ),
+                                        const SizedBox(
+                                          height: 8,
+                                        ),
+                                        if (quesFinal
+                                            .isNotEmpty)
+                                          Text(
+                                            '${quesFinal[index].toString()} customers in queue',
+                                            style:
+                                            TextStyle(
+                                              fontSize:
+                                              8,
+                                              color: selected == index
+                                                  ? Colors.black
+                                                  : Colors.white,
+                                              fontStyle:
+                                              FontStyle.italic,
+                                            ),
+                                          ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        _buildButton(
+                                          text:
+                                          'Join Now',
+                                          color: Colors
+                                              .green,
+                                          i: index,
+                                        )
+                                      ],
+                                    )
+
+                                    // _buildColumn(
+                                    //   url: AppImages.yellowCalender,
+                                    //   t1: 'Empty Seat',
+                                    //   t2: 'Available in 20 min',
+                                    //   t3: '${i + 0} customer in queue',
+                                    //   btnColors: Colors.green,
+                                    //   btnText: 'Join Now',
+                                    //   i: i,
+                                    // ),
+                                  ],
+                                ),
+                              ),
+                            ),
+
                         ],
-                      ),
-                    ),
+                      )
+                    ],
                   )
                 ],
               ),
@@ -2641,6 +2225,20 @@ class _CheckInPageState extends State<CheckInPage> {
                 minute: int.parse(freeSlots2[i].split(":")[1]));
             selectedTimeFrom =
                 "${_time.hour < 10 ? 0 : ''}${_time.hour}:${_time.minute < 10 ? 0 : ''}${_time.minute}";
+
+            DateTime sel = DateTime(
+                DateTime.now().year,
+                DateTime.now().month,
+                DateTime.now().day,
+                _time.hour,
+                _time.minute);
+
+            if(sel.compareTo(DateTime.now())<0){
+              selectedTimeFrom = "${DateTime.now().hour < 10 ? 0 : ''}${DateTime.now().hour}:${DateTime.now().minute < 10 ? 0 : ''}${DateTime.now().minute}";
+              print("Tapinda");
+            }else{
+              print("uuu");
+            }
           }
           Fluttertoast.showToast(msg: "free slot at $selectedTimeFrom");
 

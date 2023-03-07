@@ -15,14 +15,14 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  Completer<GoogleMapController> _controller = Completer();
+  final Completer<GoogleMapController> _controller = Completer();
 
-  static final CameraPosition _kGooglePlex = CameraPosition(
+  static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(51.507351, -0.127758),
     zoom: 14.4746,
   );
 
-  static final CameraPosition _kLake = const CameraPosition(
+  static const CameraPosition _kLake = CameraPosition(
       bearing: 192.8334901395799,
       target: LatLng(51.507351, -0.127758),
       tilt: 59.440717697143555,
@@ -365,8 +365,8 @@ class _MapPageState extends State<MapPage> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: (){},
-        label: Text('Mt Seat'),
-        icon: Icon(Icons.directions_boat),
+        label: const Text('Mt Seat'),
+        icon: const Icon(Icons.directions_boat),
       ),
     );
   }

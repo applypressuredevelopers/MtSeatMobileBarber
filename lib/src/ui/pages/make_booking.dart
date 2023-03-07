@@ -6760,8 +6760,20 @@ class _MakeBookingPageState extends State<MakeBookingPage> {
         for(int i =0; i < bookings2.length; i ++){
           String startTime = bookings2[i].slot.toString();
           String endTime = bookings2[i].slotTo.toString();
+          print(newT);
+          TimeOfDay _start = TimeOfDay(hour:int.parse(startTime.split(":")[0]),minute: int.parse(startTime.split(":")[1]));
+          TimeOfDay _end = TimeOfDay(hour:int.parse(endTime.split(":")[0]),minute: int.parse(endTime.split(":")[1]));
 
-          if(newT.compareTo(DateTime.now())<0){
+          DateTime startingTime = DateTime(now.year, mon, selectedDate, _start.hour, _start.minute);
+          DateTime endingTime = DateTime(now.year, mon, selectedDate, _end.hour, _end.minute);
+
+          ///Checkin if selected time is is not booked
+          if(newT.compareTo(startingTime)>0 && newT.compareTo(endingTime)<0){
+            isVisible = false;
+            validBooking = "no";
+          }
+
+          if(newT.compareTo(DateTime.now())<0 ){
             isVisible = false;
             validBooking = "no";
           }
